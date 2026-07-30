@@ -29,7 +29,7 @@ else
         fi 
     }
 
-    cp mongodb /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
+    cp mongodb.repo /etc/yum.repos.d/mongodb.repo &>>$LOG_FILE
 
     validate $? "mongo.repo"
 
