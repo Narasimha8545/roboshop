@@ -19,7 +19,7 @@ else
     echo -e " $G your are running the root user $N " |tee -a $LOG_FILE
     fi
     # validate function takes the exist status, what command they tried to install
-    validate(){
+    validate() {
         if [ $1 -eq 0 ] 
         then
             echo -e " $G  $2 is .... successful $N" |tee -a $LOG_FILE
