@@ -2,7 +2,9 @@
 
 AMI_ID="ami-0220d79f3f480ecf5"
 SG_ID="sg-00e84a02e682ac879"
-Domain="natureaws-84.shop"
+DOMAIN="natureaws-84.shop"
+HOSTED_ZONE_ID="Z02640321D44PD6W59JI5"
+
 INSTANCES=("mongodb" "redis" "frontend")
 
 for instance in "${INSTANCES[@]}"
@@ -41,24 +43,22 @@ do
 
     echo "$instance IP address is $IP"
 
-done
-
-aws route53 change-resource-record-sets \
-    --hosted-zone-id Z02640321D44PD6W59JI5 \
-    --change-batch '{
-        "Changes": [
-            {
+    aws route53 change-resource-record-sets \
+        --hosted-zone-id $HOSTED_ZONE_ID \
+        --change-batch '{
+            "Changes": [{
                 "Action": "UPSERT",
                 "ResourceRecordSet": {
-                    "Name": "'$instance'.'$Domain'",
+                    "Name": "'"$instance.$DOMAIN"'",
                     "Type": "A",
                     "TTL": 1,
-                    "ResourceRecords": [
-                        {
-                            "Value": "'"$IP"'"
-                        }
-                    ]
+                    "ResourceRecords": [{
+                        "Value": "'"$IP"'"
+                    }]
                 }
-            }
-        ]
-    }'
+            }]
+        }'
+
+    echo "$instance.$DOMAIN record created"
+
+done
