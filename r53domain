@@ -2,7 +2,7 @@
 
 AMI_ID="ami-0220d79f3f480ecf5"
 SG_ID="sg-00e84a02e682ac879"
-
+Domain="natureaws-84.shop"
 INSTANCES=("mongodb" "redis" "frontend")
 
 for instance in "${INSTANCES[@]}"
@@ -50,7 +50,7 @@ aws route53 change-resource-record-sets \
             {
                 "Action": "UPSERT",
                 "ResourceRecordSet": {
-                    "Name": "'$instance'.'natureaws-84.shop'",
+                    "Name": "'$instance'.'$Domain'",
                     "Type": "A",
                     "TTL": 1,
                     "ResourceRecords": [
