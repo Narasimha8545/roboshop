@@ -50,7 +50,7 @@ aws route53 change-resource-record-sets \
             {
                 "Action": "UPSERT",
                 "ResourceRecordSet": {
-                    "Name": "'"$instance.natureaws-84.shop"'",
+                    "Name": "'$instance'.'natureaws-84.shop'",
                     "Type": "A",
                     "TTL": 1,
                     "ResourceRecords": [
