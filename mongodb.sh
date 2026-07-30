@@ -8,6 +8,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(basename "$0" .sh)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 mkdir -p "$LOGS_FOLDER"
 
@@ -24,7 +25,7 @@ else
     echo -e "${G}You are running as root user${N}" | tee -a "$LOG_FILE"
 fi
 
-# Function to validate command execution
+# Validation function
 validate() {
     if [ "$1" -eq 0 ]
     then
@@ -35,20 +36,28 @@ validate() {
     fi
 }
 
-cp mongodb.repo /etc/yum.repos.d/mongodb.repo &>>"$LOG_FILE"
+# Copy mongodb.repo
+cp "$SCRIPT_DIR/mongodb.repo" /etc/yum.repos.d/mongodb.repo &>>"$LOG_FILE"
 validate $? "Copy mongodb.repo"
 
+# Install MongoDB
 dnf install mongodb-org -y &>>"$LOG_FILE"
 validate $? "Install mongodb-org"
 
+# Enable MongoDB
 systemctl enable mongod &>>"$LOG_FILE"
 validate $? "Enable mongod"
 
+# Start MongoDB
 systemctl start mongod &>>"$LOG_FILE"
 validate $? "Start mongod"
 
+# Allow remote connections
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>>"$LOG_FILE"
 validate $? "Update mongod.conf"
 
+# Restart MongoDB
 systemctl restart mongod &>>"$LOG_FILE"
 validate $? "Restart mongod"
+
+echo -e "${G}MongoDB installation completed successfully.${N}" | tee -a "$LOG_FILE"
