@@ -2,61 +2,57 @@
 
 R="\e[31m"
 G="\e[32m"
-B="\e[34m"
 N="\e[0m"
 
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(basename "$0" .sh)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 mkdir -p "$LOGS_FOLDER"
 
-echo "Script started executing at: $(date)" | tee -a "$LOG_FILE"
+echo "Script started at: $(date)" | tee -a "$LOG_FILE"
 
-# Check whether the user is root
 USER_ID=$(id -u)
 
 if [ "$USER_ID" -ne 0 ]
 then
-    echo -e "${R}Please run the script as root user${N}" | tee -a "$LOG_FILE"
+    echo -e "${R}Please run this script as root${N}" | tee -a "$LOG_FILE"
     exit 1
-else
-    echo -e "${G}You are running as root user${N}" | tee -a "$LOG_FILE"
 fi
 
-# Validation function
 validate() {
-    if [ "$1" -eq 0 ]
+    if [ $1 -eq 0 ]
     then
-        echo -e "${G}$2 ... SUCCESS${N}" | tee -a "$LOG_FILE"
+        echo -e "${G}$2 SUCCESS${N}" | tee -a "$LOG_FILE"
     else
-        echo -e "${R}$2 ... FAILED${N}" | tee -a "$LOG_FILE"
+        echo -e "${R}$2 FAILED${N}" | tee -a "$LOG_FILE"
         exit 1
     fi
 }
 
-# Copy mongodb.repo
-cp "$SCRIPT_DIR/mongodb.repo" /etc/yum.repos.d/mongodb.repo &>>"$LOG_FILE"
-validate $? "Copy mongodb.repo"
+cat >/etc/yum.repos.d/mongo.repo <<EOF
+[mongodb-org-7.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/amazon/2023/mongodb-org/7.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://pgp.mongodb.com/server-7.0.asc
+EOF
 
-# Install MongoDB
-dnf install mongodb-org -y &>>"$LOG_FILE"
-validate $? "Install mongodb-org"
+validate $? "Creating mongo.repo"
 
-# Enable MongoDB
+dnf install -y mongodb-org &>>"$LOG_FILE"
+validate $? "Installing MongoDB"
+
 systemctl enable mongod &>>"$LOG_FILE"
 validate $? "Enable mongod"
 
-# Start MongoDB
 systemctl start mongod &>>"$LOG_FILE"
 validate $? "Start mongod"
 
-# Allow remote connections
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>>"$LOG_FILE"
 validate $? "Update mongod.conf"
 
-# Restart MongoDB
 systemctl restart mongod &>>"$LOG_FILE"
 validate $? "Restart mongod"
 
