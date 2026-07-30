@@ -29,5 +29,3 @@ else
 fi
 echo "$instance ip address is $IP"
 done 
-
-
