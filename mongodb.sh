@@ -28,8 +28,8 @@ else
             exit 1
         fi 
     }
-    
-    cp mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
+
+    cp mongodb.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 
     validate $? "mongo.repo"
 
