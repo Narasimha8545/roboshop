@@ -89,5 +89,5 @@ EOF
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 validate $? "installing mongodb-mongosh"
 
-mongosh --host $DOMAIN  </app/schema/catalogue.js &>>$LOG_FILE
+mongosh --host $DOMAIN  </app/db/master-data.js &>>$LOG_FILE
 validate $? "loading catalogue schema"
