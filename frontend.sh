@@ -110,23 +110,23 @@ http {
         }
 
         location /api/catalogue/ {
-            proxy_pass http://catalogue.natureaws-84.shop:8080/;
+            proxy_pass http://localhost:8080/;
         }
 
         location /api/user/ {
-            proxy_pass http://user.natureaws-84.shop:8080/;
+            proxy_pass http://localhost:8080/;
         }
 
         location /api/cart/ {
-            proxy_pass http://cart.natureaws-84.shop:8080/;
+            proxy_pass http://localhost:8080/;
         }
 
         location /api/shipping/ {
-            proxy_pass http://shipping.natureaws-84.shop:8080/;
+            proxy_pass http://localhost:8080/;
         }
 
         location /api/payment/ {
-            proxy_pass http://payment.natureaws-84.shop:8080/;
+            proxy_pass http://localhost:8080/;
         }
 
         location /health {
