@@ -37,9 +37,13 @@ validate $? "nodejs module enable"
 
 dnf install nodejs -y &>>$LOG_FILE
 validate $? "nodejs"
-
-#useradd --system --home /app --shell /sbin/nologin --comment "roboshop application user" roboshop &>>$LOG_FILE
-#validate $? "roboshop user creation"
+if [ $? -ne 0 ]
+then 
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop application user" roboshop &>>$LOG_FILE
+validate $? "roboshop user creation"
+else 
+     echo -e " $R system user roboshop is already present $N " | tee -a $LOG_FILE
+fi
 
 mkdir -p /app &>>$LOG_FILE
 validate $? "app directory creation"
@@ -47,10 +51,11 @@ validate $? "app directory creation"
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
 validate $? "catalogue zip download"
 
+rm -rf /app/* &>>$LOG_FILE
 cd /app &>>$LOG_FILE
 validate $? "changing directory to /app"
 
-unzip /tmp/catalogue.zip &>>$LOG_FILE
+unzip /tmp/catalogue.zip &>>$LOG_FILE 
 validate $? "unzip catalogue zip"
 
 npm install &>>$LOG_FILE
