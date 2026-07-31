@@ -5,7 +5,7 @@ SG_ID="sg-00e84a02e682ac879"
 DOMAIN="natureaws-84.shop"
 HOSTED_ZONE_ID="Z02640321D44PD6W59JI5"
 
-INSTANCES=("mongodb" "frontend" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch")
+INSTANCES=("mongodb" "catalogue") # "frontend" "redis" "mysql" "rabbitmq"  "user" "cart" "shipping" "payment" "dispatch")
 
 for instance in "${INSTANCES[@]}"
 do
