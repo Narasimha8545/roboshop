@@ -56,7 +56,7 @@ validate $? "unzip catalogue zip"
 npm install &>>$LOG_FILE
 validate $? "npm install"
 
-cat > /etc/systemd/system/catalogue.service <<EOF
+cat >/etc/systemd/system/catalogue.service <<EOF
 [Unit]
 Description = Catalogue Service
 
