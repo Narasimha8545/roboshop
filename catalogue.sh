@@ -23,9 +23,9 @@ fi
 validate() {
     if [ $1 -eq 0 ]
     then
-        echo -e " $G $2 is .... successful $N" | tee -a $LOG_FILE
+        echo -e " $N $2 is .... $G successful $N" | tee -a $LOG_FILE
     else    
-        echo -e " $R $2 is .... failed $N "| tee -a $LOG_FILE
+        echo -e " $N $2 is .... $R failed $N "| tee -a $LOG_FILE
         exit 1
     fi
 }
@@ -37,12 +37,14 @@ validate $? "nodejs module enable"
 
 dnf install nodejs -y &>>$LOG_FILE
 validate $? "nodejs"
+
+id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]
 then 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop application user" roboshop &>>$LOG_FILE
 validate $? "roboshop user creation"
 else 
-     echo -e " $R system user roboshop is already present $N " | tee -a $LOG_FILE
+     echo -e " $G system user roboshop is already present $N " | tee -a $LOG_FILE
 fi
 
 mkdir -p /app &>>$LOG_FILE
