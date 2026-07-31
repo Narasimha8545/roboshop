@@ -82,11 +82,14 @@ systemctl enable catalogue &>>$LOG_FILE
 systemctl start catalogue 
 validate $? "starting catalogue service"
 
-cat >/etc/yum.repos.d/mongo.repo <<EOF
+ cat >/etc/yum.repos.d/mongo.repo <<EOF
 [mongodb-org-7.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/7.0/x86_64/
-EOF 
+baseurl=https://repo.mongodb.org/yum/amazon/2023/mongodb-org/7.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://pgp.mongodb.com/server-7.0.asc
+EOF
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 validate $? "installing mongodb-mongosh"
