@@ -5,60 +5,62 @@ SG_ID="sg-00e84a02e682ac879"
 DOMAIN="natureaws-84.shop"
 HOSTED_ZONE_ID="Z02640321D44PD6W59JI5"
 
-INSTANCES=("mongodb" "frontend" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "frontend")
+INSTANCES=("mongodb" "frontend" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch")
 
 for instance in "${INSTANCES[@]}"
 do
-
     if [ "$instance" == "frontend" ]
     then
         INSTANCE_ID=$(aws ec2 run-instances \
-        --image-id $AMI_ID \
-        --instance-type t2.micro \
-        --security-group-ids $SG_ID \
-        --associate-public-ip-address \
-        --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
-        --query "Instances[0].InstanceId" \
-        --output text)
+            --image-id "$AMI_ID" \
+            --instance-type t2.micro \
+            --security-group-ids "$SG_ID" \
+            --associate-public-ip-address \
+            --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
+            --query "Instances[0].InstanceId" \
+            --output text)
+
+        aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
 
         IP=$(aws ec2 describe-instances \
-        --instance-ids $INSTANCE_ID \
-        --query "Reservations[0].Instances[0].PublicIpAddress" \
-        --output text)
+            --instance-ids "$INSTANCE_ID" \
+            --query "Reservations[0].Instances[0].PublicIpAddress" \
+            --output text)
 
     else
         INSTANCE_ID=$(aws ec2 run-instances \
-        --image-id $AMI_ID \
-        --instance-type t2.micro \
-        --security-group-ids $SG_ID \
-        --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
-        --query "Instances[0].InstanceId" \
-        --output text)
+            --image-id "$AMI_ID" \
+            --instance-type t2.micro \
+            --security-group-ids "$SG_ID" \
+            --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
+            --query "Instances[0].InstanceId" \
+            --output text)
+
+        aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
 
         IP=$(aws ec2 describe-instances \
-        --instance-ids $INSTANCE_ID \
-        --query "Reservations[0].Instances[0].PrivateIpAddress" \
-        --output text)
+            --instance-ids "$INSTANCE_ID" \
+            --query "Reservations[0].Instances[0].PrivateIpAddress" \
+            --output text)
     fi
 
-    echo "$instance IP address is $IP"
+    echo "$instance IP: $IP"
 
     aws route53 change-resource-record-sets \
-        --hosted-zone-id $HOSTED_ZONE_ID \
-        --change-batch '{
-            "Changes": [{
-                "Action": "UPSERT",
-                "ResourceRecordSet": {
-                    "Name": ""$instance"."$DOMAIN"",
-                    "Type": "A",
-                    "TTL": 1,
-                    "ResourceRecords": [{
-                        "Value": "'"$IP"'"
+        --hosted-zone-id "$HOSTED_ZONE_ID" \
+        --change-batch "{
+            \"Changes\": [{
+                \"Action\": \"UPSERT\",
+                \"ResourceRecordSet\": {
+                    \"Name\": \"$instance.$DOMAIN\",
+                    \"Type\": \"A\",
+                    \"TTL\": 1,
+                    \"ResourceRecords\": [{
+                        \"Value\": \"$IP\"
                     }]
                 }
             }]
-        }'
+        }"
 
     echo "$instance.$DOMAIN record created"
-
 done
