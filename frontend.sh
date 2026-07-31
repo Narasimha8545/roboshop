@@ -122,5 +122,5 @@ http {
 EOF &>>$LOG_FILE
 validate $? "copy nginx.config"
 
-systemctl restrat frontend  &>>$LOG_FILE
+systemctl restrat nginx  &>>$LOG_FILE
 validate $? "restart nginx"
