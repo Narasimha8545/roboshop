@@ -49,7 +49,7 @@ do
             "Changes": [{
                 "Action": "UPSERT",
                 "ResourceRecordSet": {
-                    "Name": "'"$instance.$DOMAIN"'",
+                    "Name": ""$instance"."$DOMAIN"",
                     "Type": "A",
                     "TTL": 1,
                     "ResourceRecords": [{
