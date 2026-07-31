@@ -71,7 +71,7 @@ SyslogIdentifier=catalogue
 
 [Install]
 WantedBy=multi-user.target
-EOF &>>$LOG_FILE
+EOF 
 validate $? "copying catalogue.service file"
 
 systemctl daemon-reload &>>$LOG_FILE
