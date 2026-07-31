@@ -71,11 +71,11 @@ SyslogIdentifier=catalogue
 
 [Install]
 WantedBy=multi-user.target
-EOF
+EOF &>>$LOG_FILE
 validate $? "copying catalogue.service file"
 
-systemctl daemon-reload 
-systemctl enable catalogue
+systemctl daemon-reload &>>$LOG_FILE
+systemctl enable catalogue &>>$LOG_FILE
 systemctl start catalogue 
 validate $? "starting catalogue service"
 
@@ -85,7 +85,7 @@ name=MongoDB Repository
 baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/7.0/x86_64/
 enabled=1
 gpgcheck=0
-EOF
+EOF &>>$LOG_FILE
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 validate $? "installing mongodb-mongosh"
 
