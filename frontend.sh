@@ -53,7 +53,7 @@ cd /usr/share/nginx/html &>>$LOG_FILE
 unzip /tmp/frontend.zip  &>>$LOG_FILE
 validate $? "unzip frontend"
 
-rm-rf /etc/nginx/nginx.conf  &>>$LOG_FILE
+rm -rf /etc/nginx/nginx.conf  &>>$LOG_FILE
 validate $? "removing default nginx config"
 
 cat >/etc/nginx/nginx.conf <<EOF 
