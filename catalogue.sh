@@ -38,8 +38,8 @@ validate $? "nodejs module enable"
 dnf install nodejs -y &>>$LOG_FILE
 validate $? "nodejs"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop application user" roboshop &>>$LOG_FILE
-validate $? "roboshop user creation"
+#useradd --system --home /app --shell /sbin/nologin --comment "roboshop application user" roboshop &>>$LOG_FILE
+#validate $? "roboshop user creation"
 
 mkdir -p /app &>>$LOG_FILE
 validate $? "app directory creation"
