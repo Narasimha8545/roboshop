@@ -5,7 +5,7 @@ G="\e[32m"
 N="\e[0m"
 
 LOGS_FOLDER="/var/log/roboshop-logs"
-SCRIPT_NAME=$($0 "$0" .sh)
+SCRIPT_NAME=$($0 | cut -d "." -f 1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 
 mkdir -p "$LOGS_FOLDER"
