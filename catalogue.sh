@@ -58,20 +58,18 @@ validate $? "npm install"
 
 cat >/etc/systemd/system/catalogue.service <<EOF
 [Unit]
-Description = Catalogue Service
+Description=Catalogue Service
 
 [Service]
 User=roboshop
 Environment=MONGO=true
-// highlight-start
-Environment=MONGO_URL="mongodb://$DOMAIN:27017/catalogue"
-// highlight-end
+Environment=MONGO_URL=mongodb://$DOMAIN:27017/catalogue
 ExecStart=/bin/node /app/server.js
 SyslogIdentifier=catalogue
 
 [Install]
 WantedBy=multi-user.target
-EOF 
+EOF
 validate $? "copying catalogue.service file"
 
 systemctl daemon-reload &>>$LOG_FILE
