@@ -96,11 +96,12 @@ EOF
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 validate $? "installing mongodb-mongosh"
 
-STATUS=$ (mongosh --host mongodb.natureaws-84.shop -eval 'db.getMongo().getDBNames().indexOf("catalogue")')
-if [ $STATUS -lt 0 ]
-then 
-mongosh --host $DOMAIN  </app/db/master-data.js &>>$LOG_FILE
-validate $? "loading catalogue schema"
-else 
-    echo -e " $G data is already loaded...skiping "
+STATUS=$(mongosh --quiet --host "$DOMAIN" --eval 'db.getSiblingDB("catalogue").products.countDocuments()')
+
+if [ "$STATUS" -eq 0 ]
+then
+    mongosh --host "$DOMAIN" </app/db/master-data.js &>>"$LOG_FILE"
+    validate $? "Loading catalogue schema"
+else
+    echo -e "${G}Catalogue data already exists. Skipping.${N}"
 fi
