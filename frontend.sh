@@ -30,30 +30,30 @@ validate() {
     fi
 }
 
-dnf module disable nginx -y &<<$LOG_FILE
+dnf module disable nginx -y  &>>$LOG_FILE
 validate $? " disabling defalut nginx"
 
-dnf module enable nginx:1.24 -y &<<$LOG_FILE
+dnf module enable nginx:1.24 -y &>>$LOG_FILE
 validate $? " enableing the nginx:1.24"
 
-dnf install nginx -y  &<<$LOG_FILE
+dnf install nginx -y  &>>$LOG_FILE
 validate $? "installing the nginx"
 
-systemctl enable nginx  &<<$LOG_FILE
-systemctl start enginx  &<<$LOG_FILE
+systemctl enable nginx  &>>$LOG_FILE
+systemctl start enginx  &>>$LOG_FILE
 validate $? "starting nginx"
 
-rm -rf /usr/share/nginx/html/* &<<$LOG_FILE
+rm -rf /usr/share/nginx/html/* &>>$LOG_FILE
 validate $? "removing the defult content"
 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip  &<<$LOG_FILE
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip  &>>$LOG_FILE
 validate $? "downloading the frontend"
 
-cd /usr/share/nginx/html &<<$LOG_FILE
-unzip /tmp/frontend.zip  &<<$LOG_FILE
+cd /usr/share/nginx/html &>>$LOG_FILE
+unzip /tmp/frontend.zip  &>>$LOG_FILE
 validate $? "unzip frontend"
 
-rm-rf /etc/nginx/nginx.conf  &<<$LOG_FILE
+rm-rf /etc/nginx/nginx.conf  &>>$LOG_FILE
 validate $? "removing default nginx config"
 
 cat >/etc/nginx/nginx.conf <<EOF 
@@ -119,9 +119,8 @@ http {
 
     }
 }
-EOF  &<<$LOG_FILE
+EOF &>>$LOG_FILE
 validate $? "copy nginx.config"
 
-systemctl restrat frontend  &<<$LOG_FILE
+systemctl restrat frontend  &>>$LOG_FILE
 validate $? "restart nginx"
-
