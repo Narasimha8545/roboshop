@@ -31,6 +31,97 @@ validate() {
 }
 
 dnf module disable nginx -y 
-validate $? "$G disabling defalut nginx"
+validate $? " disabling defalut nginx"
 
-dnf module enable
+dnf module enable nginx:1.24 -y
+validate $? " enableing the nginx:1.24"
+
+dnf install nginx -y
+validate $? "installing the nginx"
+
+systemctl enable nginx
+systemctl start enginx
+validate $? "starting nginx"
+
+rm -rf /usr/share/nginx/html/*
+validate $? "removing the defult content"
+
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+validate $? "downloading the frontend"
+
+cd /usr/share/nginx/html
+unzip /tmp/frontend.zip
+validate $? "unzip frontend"
+
+rm-rf /etc/nginx/nginx.conf
+validate $? "removing default nginx config"
+
+cat >/etc/nginx/nginx.conf <<EOF 
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid /run/nginx.pid;
+
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    keepalive_timeout   65;
+    types_hash_max_size 4096;
+
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    include /etc/nginx/conf.d/*.conf;
+
+    server {
+        listen       80;
+        listen       [::]:80;
+        server_name  _;
+        root         /usr/share/nginx/html;
+
+        include /etc/nginx/default.d/*.conf;
+
+        error_page 404 /404.html;
+        location = /404.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+        }
+
+        location /images/ {
+          expires 5s;
+          root   /usr/share/nginx/html;
+          try_files $uri /images/placeholder.jpg;
+        }
+        location /api/catalogue/ { proxy_pass http://:8080/; }
+        location /api/user/ { proxy_pass http://localhost:8080/; }
+        location /api/cart/ { proxy_pass http://localhost:8080/; }
+        location /api/shipping/ { proxy_pass http://localhost:8080/; }
+        location /api/payment/ { proxy_pass http://localhost:8080/; }
+
+        location /health {
+          stub_status on;
+          access_log off;
+        }
+
+    }
+}
+EOF
+validate $? "copy nginx.config"
+
+systemctl restrat frontend
+validate $? "restart nginx"
+
