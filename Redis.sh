@@ -41,7 +41,7 @@ if [ $? -eq 0 ]
 then
     echo -e "$G Redis is already installed. Exiting... $N" | tee -a "$LOG_FILE"
     exit 0
-fi
+else
 
     dnf module disable redis -y &>> "$LOG_FILE"
     validate $? "redis module disable"
@@ -70,3 +70,4 @@ END_TIME=$(date +%s)
 TOTAL_TIME=$((END_TIME - START_TIME))
 
 echo -e "$G Redis setup completed successfully. Time taken: $TOTAL_TIME seconds $N" | tee -a "$LOG_FILE"
+fi
