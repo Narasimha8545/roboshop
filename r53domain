@@ -7,7 +7,7 @@ HOSTED_ZONE_ID="Z02640321D44PD6W59JI5"
 
 INSTANCES=("mongodb" "catalogue" "frontend" "redis" "mysql" "rabbitmq"  "user" "cart" "shipping" "payment" "dispatch")
 
-for instance in "${INSTANCES[@]}"
+for instance in $@ ##"${INSTANCES[@]}"
 do
     if [ "$instance" == "frontend" ]
     then
