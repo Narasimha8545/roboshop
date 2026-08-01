@@ -34,8 +34,7 @@ validate() {
     fi
 }
 
-# Check Redis installation
-rpm -q redis &>> "$LOG_FILE"
+
 
 if [ $? -ne 0 ]
 then
