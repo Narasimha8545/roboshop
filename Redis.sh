@@ -34,6 +34,14 @@ validate() {
     fi
 }
 
+# Check whether Redis is already installed
+rpm -q redis &>> "$LOG_FILE"
+
+if [ $? -eq 0 ]
+then
+    echo -e "$G Redis is already installed. Exiting... $N" | tee -a "$LOG_FILE"
+    exit 0
+fi
 
     dnf module disable redis -y &>> "$LOG_FILE"
     validate $? "redis module disable"
