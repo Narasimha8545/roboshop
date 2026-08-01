@@ -35,11 +35,6 @@ validate() {
 }
 
 
-
-if [ $? -ne 0 ]
-then
-    echo -e "$R Redis is not installed.. going to install it $N" | tee -a "$LOG_FILE"
-
     dnf module disable redis -y &>> "$LOG_FILE"
     validate $? "redis module disable"
 
@@ -49,9 +44,7 @@ then
     dnf install redis -y &>> "$LOG_FILE"
     validate $? "redis installation"
 
-else
-    echo -e "$G Redis is already installed.. nothing to install $N" | tee -a "$LOG_FILE"
-fi
+
 
 # Redis configuration
 sed -i 's/127.0.0.1/0.0.0.0/g; s/protected-mode yes/protected-mode no/g' /etc/redis/redis.conf &>> "$LOG_FILE"
