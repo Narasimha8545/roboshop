@@ -1,48 +1,72 @@
 #!/bin/bash
+
 START_TIME=$(date +%s)
+
 R="\e[31m"
 G="\e[32m"
 N="\e[0m"
 
 LOGS_FOLDER="/var/log/roboshop-logs"
-SCRIPT_NAME=$(basename $0 |cut -d "." -f1)
+SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 SCRIPT_DIR=$PWD
 DOMAIN="mongodb.natureaws-84.shop"
 
-mkdir -p $LOGS_FOLDER
+mkdir -p "$LOGS_FOLDER"
 
 userid=$(id -u)
-if [ $userid -ne 0 ]
-then 
-     echo -e " $R please run the script as root user $N " | tee -a $LOG_FILE
-     exit 1 #give other than 0 upto 127
+
+if [ "$userid" -ne 0 ]
+then
+    echo -e "$R Please run the script as root user $N" | tee -a "$LOG_FILE"
+    exit 1
 else
-    echo -e " $G your are running the root user $N " | tee -a $LOG_FILE
+    echo -e "$G You are running as root user $N" | tee -a "$LOG_FILE"
 fi
+
 validate() {
-    if [ $1 -eq 0 ]
+    if [ "$1" -eq 0 ]
     then
-        echo -e " $N $2 is .... $G successful $N" | tee -a $LOG_FILE
-    else    
-        echo -e " $N $2 is .... $R failed $N "| tee -a $LOG_FILE
+        echo -e "$N $2 is .... $G successful $N" | tee -a "$LOG_FILE"
+    else
+        echo -e "$N $2 is .... $R failed $N" | tee -a "$LOG_FILE"
         exit 1
     fi
 }
-dnf module disable redis -y &>>$LOG_FILE
-validate $? "redis module disable"
 
-dnf module enable redis:7 -y &>>$LOG_FILE
-validate $? "redis module enable"
+# Check Redis installation
+rpm -q redis &>> "$LOG_FILE"
 
-dnf install redis -y &>>$LOG_FILE
-validate $? "redis"
+if [ $? -ne 0 ]
+then
+    echo -e "$R Redis is not installed.. going to install it $N" | tee -a "$LOG_FILE"
 
-sed -i 's/127.0.0.1/0.0.0.0/g; s/protected-mode yes/protected-mode no/g'  /etc/redis/redis.conf &>>$LOG_FILE
+    dnf module disable redis -y &>> "$LOG_FILE"
+    validate $? "redis module disable"
+
+    dnf module enable redis:7 -y &>> "$LOG_FILE"
+    validate $? "redis module enable"
+
+    dnf install redis -y &>> "$LOG_FILE"
+    validate $? "redis installation"
+
+else
+    echo -e "$G Redis is already installed.. nothing to install $N" | tee -a "$LOG_FILE"
+fi
+
+# Redis configuration
+sed -i 's/127.0.0.1/0.0.0.0/g; s/protected-mode yes/protected-mode no/g' /etc/redis/redis.conf &>> "$LOG_FILE"
 validate $? "redis configuration"
 
-systemctl enable redis &>>$LOG_FILE
-validate $? "enabling the redis"
+# Enable Redis service
+systemctl enable redis &>> "$LOG_FILE"
+validate $? "enabling redis"
 
-systemctl restart redis &>>$LOG_FILE
-validate $? "restarting the redis"
+# Restart Redis service
+systemctl restart redis &>> "$LOG_FILE"
+validate $? "restarting redis"
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$((END_TIME - START_TIME))
+
+echo -e "$G Redis setup completed successfully. Time taken: $TOTAL_TIME seconds $N" | tee -a "$LOG_FILE"
