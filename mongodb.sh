@@ -1,14 +1,19 @@
 #!/bin/bash
 
-# Get the script directory and source common.sh
+# Get the directory where the script is located
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+
+# Source common functions
 source ./common.sh
 
 app_name="mongodb"
 
-# Check if the script is run as root
+# Check root privileges
 check_root
 
-# Create MongoDB repository
+echo "Installing MongoDB..." | tee -a "$LOG_FILE"
+
+# Configure MongoDB repository
 cat >/etc/yum.repos.d/mongo.repo <<EOF
 [mongodb-org-7.0]
 name=MongoDB Repository
@@ -32,14 +37,15 @@ validate $? "Enabling mongod service"
 systemctl start mongod &>>"$LOG_FILE"
 validate $? "Starting mongod service"
 
-# Allow remote connections
-sed -i 's/^  bindIp: 127.0.0.1/  bindIp: 0.0.0.0/' /etc/mongod.conf &>>"$LOG_FILE"
+# Configure MongoDB to accept remote connections
+sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>>"$LOG_FILE"
 validate $? "Updating mongod.conf"
 
 # Restart MongoDB
 systemctl restart mongod &>>"$LOG_FILE"
-validate $? "Restarting mongod"
+validate $? "Restarting mongod service"
 
+# Print execution time
 print_time
 
-echo "MongoDB installation completed successfully."
+echo -e "\e[32mMongoDB installation completed successfully.\e[0m"
