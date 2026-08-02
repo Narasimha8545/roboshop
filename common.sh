@@ -68,7 +68,17 @@ app_setup () {
 
     unzip /tmp/$app_name.zip &>>$LOG_FILE
     validate $? "unzip $app_name zip"
+    }
 
+mavn_setup () {
+     dnf install maven -y &>>$LOG_FILE
+     validate $? "maven installation"
+
+      mvn clean package &>>$LOG_FILE
+     validate $? "maven build"
+
+     mv target/shipping-1.0.jar shipping.jar &>>$LOG_FILE
+     validate $? "rename shipping jar"
 
 }
 

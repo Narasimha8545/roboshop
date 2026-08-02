@@ -1,39 +1,12 @@
 #!/bin/bash
 
-START_TIME=$(date +%s)
 
-R="\e[31m"
-G="\e[32m"
-Y="\e[33m"
-N="\e[0m"
-
-LOGS_FOLDER="/var/log/roboshop-logs"
-SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
-LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-
-mkdir -p "$LOGS_FOLDER"
-
-USER_ID=$(id -u)
-
-if [ "$USER_ID" -ne 0 ]; then
-    echo -e "${R}Please run this script as root user${N}" | tee -a "$LOG_FILE"
-    exit 1
-else
-    echo -e "${G}Running as root user${N}" | tee -a "$LOG_FILE"
-fi
 
 echo "Enter RabbitMQ password:"
 read -s RABBITMQ_PASSWORD
 echo
 
-validate() {
-    if [ $1 -eq 0 ]; then
-        echo -e "${G}$2 ... SUCCESS${N}" | tee -a "$LOG_FILE"
-    else
-        echo -e "${R}$2 ... FAILED${N}" | tee -a "$LOG_FILE"
-        exit 1
-    fi
-}
+check_root
 
 # Configure RabbitMQ repository
 cat >/etc/yum.repos.d/rabbitmq.repo <<'EOF'
@@ -101,7 +74,6 @@ fi
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>"$LOG_FILE"
 validate $? "Setting RabbitMQ permissions"
 
-END_TIME=$(date +%s)
-TOTAL_TIME=$((END_TIME - START_TIME))
+print_time
 
-echo -e "${G}RabbitMQ setup completed successfully. Time taken: ${TOTAL_TIME} seconds${N}" | tee -a "$LOG_FILE"
+echo -e "$G RabbitMQ setup completed successfully. Time taken: $TOTAL_TIME seconds $N" | tee -a "$LOG_FILE"
