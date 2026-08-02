@@ -68,7 +68,7 @@ Description = User Service
 User=roboshop
 Environment=MONGO=true
 // highlight-start
-Environment=REDIS_URL='redis://redis.natureaws-84.shop:6379'
+Environment=REDIS_URL="redis://redis.natureaws-84.shop:6379"
 Environment=MONGO_URL="mongodb://mongodb.natureaws-84.shop:27017/users"
 // highlight-end
 ExecStart=/bin/node /app/server.js
