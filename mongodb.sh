@@ -30,4 +30,4 @@ validate $? "Update mongod.conf"
 systemctl restart mongod &>>"$LOG_FILE"
 validate $? "Restart mongod"
 
-echo -e "${G}MongoDB installation completed successfully.${N}" | tee -a "$LOG_FILE"
+print_time 
