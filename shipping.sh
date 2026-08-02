@@ -95,14 +95,16 @@ then
 mysql -h mysql.natureaws-84.shop -uroot -p$MYSQL_ROOT_PASSWORD </app/db/schema.sql &>>$LOG_FILE
 validate $? "shipping schema setup"
 
+else 
+     echo -e " $G shipping schema is already present $N " | tee -a $LOG_FILE
+fi
+
 mysql -h mysql.natureaws-84.shop -uroot -p$MYSQL_ROOT_PASSWORD </app/db/app-user.sql &>>$LOG_FILE
 validate $? "shipping app user setup"
 
 mysql -h mysql.natureaws-84.shop -uroot -p$MYSQL_ROOT_PASSWORD </app/db/master-data.sql &>>$LOG_FILE
 validate $? "shipping master data setup"
-else 
-     echo -e " $G shipping schema is already present $N " | tee -a $LOG_FILE
-fi
+
 systemctl restart shipping &>>$LOG_FILE
 validate $? "shipping service restart"
 
