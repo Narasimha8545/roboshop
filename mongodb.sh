@@ -4,7 +4,7 @@
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 # Source common functions
-source $SCRIPT_DIR/common.sh
+source ./common.sh
 
 app_name="mongodb"
 
