@@ -7,6 +7,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$( basename $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
+app_name=catalogue
 
 mkdir -p $LOGS_FOLDER
 
@@ -20,9 +21,8 @@ check_root () {
     else
         echo -e " $G your are running the root user $N " | tee -a $LOG_FILE
     fi
-}
 
-validate () {
+    validate () {
     if [ $1 -eq 0 ]
     then
         echo -e " $N $2 is .... $G successful $N" | tee -a $LOG_FILE
@@ -31,6 +31,58 @@ validate () {
         exit 1
     fi
 }
+}
+nodejs_setup () {
+    dnf module disable nodejs -y &>>$LOG_FILE
+    validate $? "nodejs module disable"
+
+    dnf module enable nodejs:20 -y &>>$LOG_FILE
+    validate $? "nodejs module enable"
+
+    dnf install nodejs -y &>>$LOG_FILE
+    validate $? "nodejs"
+}
+
+app_setup () {
+    id roboshop &>>$LOG_FILE
+    if [ $? -ne 0 ]
+    then 
+        useradd --system --home /app --shell /sbin/nologin --comment "roboshop application user" roboshop &>>$LOG_FILE
+        validate $? "roboshop user creation"
+    else 
+         echo -e " $G system user roboshop is already present $N " | tee -a $LOG_FILE
+    fi
+
+    mkdir -p /app &>>$LOG_FILE
+    validate $? "app directory creation"
+
+    curl -o /tmp/$app_name.zip https://roboshop-artifacts.s3.amazonaws.com/$app_name-v3.zip &>>$LOG_FILE
+    validate $? "$app_name zip download"
+
+    rm -rf /app/* &>>$LOG_FILE
+    cd /app &>>$LOG_FILE
+    validate $? "changing directory to /app"
+
+    unzip /tmp/$app_name.zip &>>$LOG_FILE
+    validate $? "unzip $app_name zip"
+
+    npm install &>>$LOG_FILE
+    validate $? "npm install"
+}
+
+systemd_setup () {
+    echo -e " $G copying $app_name.service file $N " | tee -a $LOG_FILE
+    #cp /home/centos/roboshop-shell/$app_name.service /etc/systemd/system/$app_name.service &>>$LOG_FILE
+    validate $? "copying $app_name.service file"
+
+    systemctl daemon-reload &>>$LOG_FILE
+    systemctl enable $app_name &>>$LOG_FILE
+    systemctl start $app_name &>>$LOG_FILE
+    validate $? "starting $app_name service"
+}
+
+
+
 
 print_time () {
     END_TIME=$(date +%s)
