@@ -41,6 +41,9 @@ nodejs_setup () {
 
     dnf install nodejs -y &>>$LOG_FILE
     validate $? "nodejs"
+
+    npm install &>>$LOG_FILE
+    validate $? "npm install"
 }
 
 app_setup () {
@@ -66,8 +69,7 @@ app_setup () {
     unzip /tmp/$app_name.zip &>>$LOG_FILE
     validate $? "unzip $app_name zip"
 
-    npm install &>>$LOG_FILE
-    validate $? "npm install"
+
 }
 
 systemd_setup () {
@@ -80,7 +82,7 @@ systemd_setup () {
 
     systemctl enable $app_name &>>$LOG_FILE
     validate $? "enable $app_name service"
-    
+
     systemctl start $app_name &>>$LOG_FILE
     validate $? "starting $app_name service"
 }
