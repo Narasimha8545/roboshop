@@ -40,7 +40,7 @@ nodejs_setup () {
     validate $? "nodejs module enable"
 
     dnf install nodejs -y &>>$LOG_FILE
-    validate $? "nodejs"
+    validate $? "nodejs installation"
 
     npm install &>>$LOG_FILE
     validate $? "npm install"
@@ -73,8 +73,7 @@ app_setup () {
 }
 
 systemd_setup () {
-    echo -e " $G copying $app_name.service file $N " | tee -a $LOG_FILE
-    #cp /home/centos/roboshop-shell/$app_name.service /etc/systemd/system/$app_name.service &>>$LOG_FILE
+    cp /home/centos/roboshop-shell/$app_name.service /etc/systemd/system/$app_name.service &>>$LOG_FILE
     validate $? "copying $app_name.service file"
 
     systemctl daemon-reload &>>$LOG_FILE

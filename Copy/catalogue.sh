@@ -63,20 +63,22 @@ validate $? "unzip catalogue zip"
 npm install &>>$LOG_FILE
 validate $? "npm install"
 
-cat >/etc/systemd/system/catalogue.service <<EOF
-[Unit]
-Description=Catalogue Service
+cp catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
+#cat >/etc/systemd/system/catalogue.service <<EOF
+#[Unit]
+#Description=Catalogue Service
+#
+#[Service]
+#User=roboshop
+#Environment=MONGO=true
+#Environment=MONGO_URL=mongodb://$DOMAIN:27017/catalogue
+#ExecStart=/bin/node /app/server.js
+#SyslogIdentifier=catalogue
+#
+#[Install]
+#WantedBy=multi-user.target
+#EOF
 
-[Service]
-User=roboshop
-Environment=MONGO=true
-Environment=MONGO_URL=mongodb://$DOMAIN:27017/catalogue
-ExecStart=/bin/node /app/server.js
-SyslogIdentifier=catalogue
-
-[Install]
-WantedBy=multi-user.target
-EOF
 validate $? "copying catalogue.service file"
 
 systemctl daemon-reload &>>$LOG_FILE
