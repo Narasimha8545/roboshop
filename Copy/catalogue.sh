@@ -63,7 +63,7 @@ validate $? "unzip catalogue zip"
 npm install &>>$LOG_FILE
 validate $? "npm install"
 
-cp /home/ec2-user/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
+cp /home/ec2-user/roboshop/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
 #cat >/etc/systemd/system/catalogue.service <<EOF
 #[Unit]
 #Description=Catalogue Service
