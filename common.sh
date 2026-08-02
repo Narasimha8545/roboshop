@@ -12,7 +12,7 @@ mkdir -p $LOGS_FOLDER
 
 userid=$(id -u)
 
-check_root (){
+check_root () {
     if [ $userid -ne 0 ]
     then 
          echo -e " $R please run the script as root user $N " | tee -a $LOG_FILE
@@ -22,7 +22,7 @@ check_root (){
     fi
 }
 
-validate(){
+validate () {
     if [ $1 -eq 0 ]
     then
         echo -e " $N $2 is .... $G successful $N" | tee -a $LOG_FILE
