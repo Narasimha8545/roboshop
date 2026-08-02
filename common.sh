@@ -7,7 +7,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$( basename $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-app_name=catalogue
+
 
 mkdir -p $LOGS_FOLDER
 
@@ -76,7 +76,11 @@ systemd_setup () {
     validate $? "copying $app_name.service file"
 
     systemctl daemon-reload &>>$LOG_FILE
+    validate $? "systemctl daemon-reload"
+
     systemctl enable $app_name &>>$LOG_FILE
+    validate $? "enable $app_name service"
+    
     systemctl start $app_name &>>$LOG_FILE
     validate $? "starting $app_name service"
 }
