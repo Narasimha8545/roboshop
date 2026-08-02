@@ -47,7 +47,7 @@ fi
 mkdir -p /app &>>$LOG_FILE
 validate $? "app directory creation"
 
-curl -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v1.zip &>>$LOG_FILE
+curl -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip &>>$LOG_FILE
 validate $? "payment zip download"
 
 rm -rf /app/* &>>$LOG_FILE
