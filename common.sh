@@ -22,7 +22,7 @@ check_root (){
     fi
 }
 
-validate (){
+validate(){
     if [ $1 -eq 0 ]
     then
         echo -e " $N $2 is .... $G successful $N" | tee -a $LOG_FILE
