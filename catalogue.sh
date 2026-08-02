@@ -7,14 +7,14 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$( basename $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-
+app_name=catalogue
 mkdir -p $LOGS_FOLDER
 
 source ./common.sh
 
 check_root 
 
-app_setup "catalogue"
+app_setup 
 
 nodejs_setup
 
