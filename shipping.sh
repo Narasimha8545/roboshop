@@ -95,7 +95,7 @@ then
 mysql -h mysql.natureaws-84.shop -uroot -p$MYSQL_ROOT_PASSWORD </app/db/schema.sql &>>$LOG_FILE
 validate $? "shipping schema setup"
 
-mysql -h mysql.natureaws-84.shop -uroot -p$MYSQL_ROOT_PASSWORD </app/db/app-uses.sql &>>$LOG_FILE
+mysql -h mysql.natureaws-84.shop -uroot -p$MYSQL_ROOT_PASSWORD </app/db/app-user.sql &>>$LOG_FILE
 validate $? "shipping app user setup"
 
 mysql -h mysql.natureaws-84.shop -uroot -p$MYSQL_ROOT_PASSWORD </app/db/master-data.sql &>>$LOG_FILE
