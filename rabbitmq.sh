@@ -35,9 +35,9 @@ validate() {
 cat >/etc/yum.repos.d/rabbitmq.repo <<EOF
 [modern-erlang]
 name=modern-erlang-el9
-baseurl=https://yum1.novemberain.com/erlang/el/9/$basearch
-        https://yum2.novemberain.com/erlang/el/9/$basearch
-        https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/rpm/el/9/$basearch
+baseurl=https://yum1.novemberain.com/erlang/el/9/
+        https://yum2.novemberain.com/erlang/el/9/
+        https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/rpm/el/9/
 enabled=1
 gpgcheck=0
 
@@ -59,9 +59,9 @@ gpgcheck=0
 
 [rabbitmq-el9]
 name=rabbitmq-el9
-baseurl=https://yum2.novemberain.com/rabbitmq/el/9/$basearch
-        https://yum1.novemberain.com/rabbitmq/el/9/$basearch
-        https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/rpm/el/9/$basearch
+baseurl=https://yum2.novemberain.com/rabbitmq/el/9/
+        https://yum1.novemberain.com/rabbitmq/el/9/
+        https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/rpm/el/9/
 enabled=1
 gpgcheck=0
 
