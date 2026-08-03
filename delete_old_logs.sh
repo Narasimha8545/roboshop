@@ -6,7 +6,7 @@ G="\e[32m"
 LOG_FOLDER="/etc/var/roboshop_logs"
 SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
-SOURCE_DIR=$(/home/ec2-user/app-logs)
+SOURCE_DIR="$(/home/ec2-user/app-logs)"
 
 mkdir -p "$LOG_FOLDER"
 
@@ -33,7 +33,7 @@ validate () {
 
 echo -e "script execution started at $(date '+%Y-%m-%d %H:%M:%S')" | tee -a "$LOG_FILE"
 
-FILES_TO_DELETE=$(find SOURCE_DIR -name "*.log" -mtime +10)
+FILES_TO_DELETE=$(find $SOURCE_DIR -name "*.log" -mtime +10)
 while IFS= read -r filepath
 do 
     rm -f "$filepath" &>>"$LOG_FILE"
