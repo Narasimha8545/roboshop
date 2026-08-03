@@ -72,10 +72,3 @@ else
     echo -e " $R no files older than $DAYS days are found in $SOURCE_DIR $N"
     exit 1
 fi
-
-while IFS= read -f file 
-do 
-
-rm -f "$file" &>>"$LOG_FILE"
-validate $? "Deleting $file"
-done <<< "$FILE"
