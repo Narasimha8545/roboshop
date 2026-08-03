@@ -75,6 +75,12 @@ if [ ! -z "$FILES" ]
 then
     echo -e "${G}Found the following log files older than $DAYS days:${N}" | tee -a "$LOG_FILE"
     echo "$FILES" | tee -a "$LOG_FILE"
+    TIMESTAMP=$(date +%Y%m%d%H%M%S)
+    ZIPFILE="$DEST_DIR/app-logs-$TIMESTAMP.zip"
+    echo $FILES | zip -@ "$ZIPFILE" &>>"$LOG_FILE"
+    validate $? "Creating zip file $ZIPFILE"
+
 else
     echo -e "${G}No log files older than $DAYS days found in '$SOURCE_DIR'.${N}" | tee -a "$LOG_FILE"
 fi
+
