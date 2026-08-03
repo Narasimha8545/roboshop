@@ -42,29 +42,36 @@ usage() {
     exit 1
 }
 
-# Check root user
+
+# Check root
 check_root
 
+
 # Check arguments
-if [ $# -lt 2 ]; then
+if [ $# -lt 2 ]
+then
     usage
 fi
 
+
 # Check source directory
-if [ ! -d "$SOURCE_DIR" ]; then
+if [ ! -d "$SOURCE_DIR" ]
+then
     echo -e "${R}Source directory '$SOURCE_DIR' does not exist${N}" | tee -a "$LOG_FILE"
     exit 1
 fi
 
+
 # Check destination directory
-if [ ! -d "$DEST_DIR" ]; then
+if [ ! -d "$DEST_DIR" ]
+then
     echo -e "${R}Destination directory '$DEST_DIR' does not exist${N}" | tee -a "$LOG_FILE"
     exit 1
 fi
 
 
 # Find old log files
-FILES=$(find "$SOURCE_DIR" -type f -name "*.log" -mtime +$DAYS)
+FILES=$(find "$SOURCE_DIR" -type f -name "*.log" -mtime +"$DAYS")
 
 
 if [ -n "$FILES" ]
@@ -78,7 +85,7 @@ then
     ZIPFILE="$DEST_DIR/app-logs-$TIMESTAMP.zip"
 
 
-    # Check duplicate backup
+    # Avoid duplicate backup
     if [ -f "$ZIPFILE" ]
     then
         echo -e "${G}Backup already exists: $ZIPFILE${N}" | tee -a "$LOG_FILE"
@@ -86,20 +93,20 @@ then
     fi
 
 
-    # Create zip file
+    # Create zip
     echo "Creating zip file $ZIPFILE ..." | tee -a "$LOG_FILE"
 
-    echo "$FILES" | zip "$ZIPFILE" -@ &>>"$LOG_FILE"
+    printf "%s\n" "$FILES" | zip "$ZIPFILE" -@ &>>"$LOG_FILE"
 
     validate $? "Creating zip file"
 
 
-    # Verify zip contents
-    echo "Checking zip contents..." | tee -a "$LOG_FILE"
+    # Verify zip
+    echo "Testing zip file integrity..." | tee -a "$LOG_FILE"
 
-    unzip -t "$ZIPFILE" &>>"$LOG_FILE"
+    zip -T "$ZIPFILE" &>>"$LOG_FILE"
 
-    validate $? "Listing contents of zip file"
+    validate $? "Testing zip file integrity"
 
 
 else
