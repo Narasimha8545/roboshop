@@ -54,13 +54,11 @@ fi
 if [ ! -d "$SOURCE_DIR" ]
 then 
     echo -e " $R source directory $SOURCE_DIR does not exist $N"
-    USAGE
     exit 1
 fi
 
 if [ ! -d "$DEST_DIR" ]
 then 
     echo -e " $R destination directory $DEST_DIR does not exist $N"
-    USAGE
     exit 1
 fi
