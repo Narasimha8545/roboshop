@@ -6,7 +6,7 @@ G="\e[32m"
 LOG_FOLDER="/etc/var/roboshop_logs"
 SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
-SOURCE_DIR="$(/home/ec2-user/app-logs)"
+SOURCE_DIR=/home/ec2-user/app-logs
 
 mkdir -p "$LOG_FOLDER"
 
