@@ -62,3 +62,20 @@ then
     echo -e " $R destination directory $DEST_DIR does not exist $N"
     exit 1
 fi
+
+FILE=$(find $SOURCE_DIR -name "*.log" -mtime $DAYS)
+
+if [ ! -z "$FILE" ]
+then 
+    echo -e " $G files older than $DAYS days are found in $SOURCE_DIR $N"
+else 
+    echo -e " $R no files older than $DAYS days are found in $SOURCE_DIR $N"
+    exit 1
+fi
+
+while IFS= read -f file 
+do 
+
+rm -f "$file" &>>"$LOG_FILE"
+validate $? "Deleting $file"
+done <<< "$FILE"
