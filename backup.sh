@@ -10,7 +10,7 @@ DAYS=${3:-14} #if user does not provide days then default is 14 days
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$( basename $0 |cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-SOURCE_DIR=/home/ec2-user/app-logs
+
 
  
 
@@ -45,7 +45,7 @@ USAGE () {
     echo -e " $R USAGE::$N sh backup.sh <source_directory> <destination_directory> <days (optional)> $N"
 }
 
-if [ $# -lt 2 ]
+if [ $# -lt 1 ]
 then 
     USAGE
 fi
