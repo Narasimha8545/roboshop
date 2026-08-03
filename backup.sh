@@ -97,7 +97,7 @@ then
     # Verify zip contents
     echo "Checking zip contents..." | tee -a "$LOG_FILE"
 
-    unzip -l "$ZIPFILE" &>>"$LOG_FILE"
+    unzip -t "$ZIPFILE" &>>"$LOG_FILE"
 
     validate $? "Listing contents of zip file"
 
