@@ -71,7 +71,7 @@ fi
 FILES=$(find "$SOURCE_DIR" -name "*.log" -mtime +$DAYS)
 
 
-if [ ! -z "$FILE" ]
+if [ ! -z "$FILES" ]
 then
     echo -e "${G}Found the following log files older than $DAYS days:${N}" | tee -a "$LOG_FILE"
     echo "$FILES" | tee -a "$LOG_FILE"
