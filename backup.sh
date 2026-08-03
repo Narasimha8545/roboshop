@@ -77,7 +77,7 @@ then
     echo "$FILES" | tee -a "$LOG_FILE"
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
     ZIPFILE="$DEST_DIR/app-logs-$TIMESTAMP.zip"
-    echo $FILES | zip -@ "$ZIPFILE" &>>"$LOG_FILE"
+    echo $FILES | zip  "$ZIPFILE" -@ &>>"$LOG_FILE"
     validate $? "Creating zip file $ZIPFILE"
 
 else
