@@ -21,6 +21,7 @@ check_root () {
     else
         echo -e " $G your are running the root user $N " | tee -a $LOG_FILE
     fi
+}
 
     validate () {
     if [ $1 -eq 0 ]
@@ -30,7 +31,7 @@ check_root () {
         echo -e " $N $2 is .... $R failed $N "| tee -a $LOG_FILE
         exit 1
     fi
-}
+
 }
 nodejs_setup () {
     dnf module disable nodejs -y &>>$LOG_FILE
