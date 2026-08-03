@@ -52,38 +52,66 @@ fi
 
 # Check source directory
 if [ ! -d "$SOURCE_DIR" ]; then
-    echo -e "${R}Source directory '$SOURCE_DIR' does not exist.${N}" | tee -a "$LOG_FILE"
+    echo -e "${R}Source directory '$SOURCE_DIR' does not exist${N}" | tee -a "$LOG_FILE"
     exit 1
 fi
 
 # Check destination directory
 if [ ! -d "$DEST_DIR" ]; then
-    echo -e "${R}Destination directory '$DEST_DIR' does not exist.${N}" | tee -a "$LOG_FILE"
+    echo -e "${R}Destination directory '$DEST_DIR' does not exist${N}" | tee -a "$LOG_FILE"
     exit 1
 fi
+
 
 # Find old log files
 FILES=$(find "$SOURCE_DIR" -type f -name "*.log" -mtime +$DAYS)
 
-if [ -n "$FILES" ]; then
+
+if [ -n "$FILES" ]
+then
+
     echo -e "${G}Found log files older than $DAYS days:${N}" | tee -a "$LOG_FILE"
     echo "$FILES" | tee -a "$LOG_FILE"
 
-    TIMESTAMP=$(date +%Y%m%d%H%M%S)
+
+    TIMESTAMP=$(date +%Y%m%d)
     ZIPFILE="$DEST_DIR/app-logs-$TIMESTAMP.zip"
 
-    echo "$FILES" | zip -@ "$ZIPFILE" &>>"$LOG_FILE"
+
+    # Check duplicate backup
+    if [ -f "$ZIPFILE" ]
+    then
+        echo -e "${G}Backup already exists: $ZIPFILE${N}" | tee -a "$LOG_FILE"
+        exit 0
+    fi
+
+
+    # Create zip file
+    echo "Creating zip file $ZIPFILE ..." | tee -a "$LOG_FILE"
+
+    echo "$FILES" | zip "$ZIPFILE" -@ &>>"$LOG_FILE"
+
     validate $? "Creating zip file"
 
-    unzip "$ZIPFILE" &>>"$LOG_FILE"
+
+    # Verify zip contents
+    echo "Checking zip contents..." | tee -a "$LOG_FILE"
+
+    unzip -l "$ZIPFILE" &>>"$LOG_FILE"
+
     validate $? "Listing contents of zip file"
 
+
 else
-    echo -e "${R}No log files older than $DAYS days found.${N}" | tee -a "$LOG_FILE"
+
+    echo -e "${R}No log files older than $DAYS days found in $SOURCE_DIR${N}" | tee -a "$LOG_FILE"
     exit 1
+
 fi
 
+
 END_TIME=$(date +%s)
+
 TOTAL_TIME=$((END_TIME - START_TIME))
 
-echo -e "${G}Backup completed in ${TOTAL_TIME} seconds.${N}" | tee -a "$LOG_FILE"
+echo -e "${G}Backup completed successfully in ${TOTAL_TIME} seconds${N}" | tee -a "$LOG_FILE"
