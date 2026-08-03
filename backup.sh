@@ -75,6 +75,9 @@ if [ -n "$FILES" ]; then
     echo "$FILES" | zip -@ "$ZIPFILE" &>>"$LOG_FILE"
     validate $? "Creating zip file"
 
+    unzip -l "$ZIPFILE" &>>"$LOG_FILE"
+    validate $? "Listing contents of zip file"
+
 else
     echo -e "${R}No log files older than $DAYS days found.${N}" | tee -a "$LOG_FILE"
     exit 1
