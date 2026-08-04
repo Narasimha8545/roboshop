@@ -3,7 +3,7 @@
 
 DISK_USAGE=$(df -HT | awk 'NR>1 {gsub ("%"," ",$6); print $7,$6}')
 DISK_THRESHOLD=1
-
+MSG=""
 while IFS= read -r line
 do 
   DISK_PATH=$(echo $line | awk '{print $1}')
