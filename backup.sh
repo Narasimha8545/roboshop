@@ -74,7 +74,7 @@ FILES=$(find "$SOURCE_DIR" -type f -name "*.log" -mtime +"$DAYS")
 
 if [ -n "$FILES" ]
 then
-    echo -e "${G}Found log files older than $DAYS days:${N}" | tee -a "$LOG_FILE"
+    echo -e "$G Found log files older than $DAYS days:$N" | tee -a "$LOG_FILE"
     echo "$FILES" | tee -a "$LOG_FILE"
     TIMESTAMP=$(date +%Y%m%d)
     ZIPFILE="$DEST_DIR/app-logs-$TIMESTAMP.zip"
@@ -82,23 +82,23 @@ then
     validate $? "Creating zip file"
 if [ -f "$ZIPFILE" ]
 then
-    echo -e "${G}Backup completed successfully. Zip file created at: $ZIPFILE${N}" | tee -a "$LOG_FILE"
+    echo -e "$G Backup completed successfully. Zip file created at: $ZIPFILE $N" | tee -a "$LOG_FILE"
 
     while IFS= read -r filepath
     do
-        echo -e "${G}Deleting $filepath${N}" | tee -a "$LOG_FILE"
+        echo -e "$G Deleting $filepath $N" | tee -a "$LOG_FILE"
         rm -f "$filepath" &>>"$LOG_FILE"
         validate $? "Deleting $filepath"
     done <<< "$FILES"
-    echo -e "${G} more than $DAYS days Old log files deleted successfully.${N}" | tee -a "$LOG_FILE"
+    echo -e "$G More than $DAYS days old log files deleted successfully.$N" | tee -a "$LOG_FILE"
 else
-    echo -e "${R}Backup failed. Zip file not created.${N}" | tee -a "$LOG_FILE"
+    echo -e "$G Backup failed. Zip file not created.$N" | tee -a "$LOG_FILE"
     exit 1
 fi
 
 else
 
-    echo -e "${R}No log files older than $DAYS days found in $SOURCE_DIR${N}" | tee -a "$LOG_FILE"
+    echo -e "$R No log files older than $DAYS days found in $SOURCE_DIR$N" | tee -a "$LOG_FILE"
     exit 1
 
 fi
@@ -108,4 +108,4 @@ END_TIME=$(date +%s)
 
 TOTAL_TIME=$((END_TIME - START_TIME))
 
-echo -e "${G}Backup completed successfully in ${TOTAL_TIME} seconds${N}" | tee -a "$LOG_FILE"
+echo -e "$G Backup completed successfully in ${TOTAL_TIME} seconds$N" | tee -a "$LOG_FILE"
