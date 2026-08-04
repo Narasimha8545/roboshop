@@ -78,7 +78,7 @@ then
     echo "$FILES" | tee -a "$LOG_FILE"
     TIMESTAMP=$(date +%Y%m%d)
     ZIPFILE="$DEST_DIR/app-logs-$TIMESTAMP.zip"
-    find "$SOURCE_DIR" -type f -name "*.log" -mtime +"$DAYS" | zip -@ "$ZIPFILE"  &>>"$LOG_FILE"
+    echo "$FILES" | zip -@ "$ZIPFILE"  &>>"$LOG_FILE"
     validate $? "Creating zip file"
 if [ -f "$ZIPFILE" ]
 then
