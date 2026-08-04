@@ -8,7 +8,7 @@ N="\e[0m"
 
 SOURCE_DIR=$1
 DEST_DIR=$2
-DAYS=${3:-14}
+DAYS=${3:-14} 
 
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
