@@ -13,10 +13,10 @@ DAYS=${3:-14}
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
 
-mkdir -p "$LOGS_FOLDER"
+
 
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-
+ 
 USERID=$(id -u)
 
 check_root() {
@@ -46,6 +46,7 @@ usage() {
 # Check root
 check_root
 
+mkdir -p "$LOGS_FOLDER"
 
 # Check arguments
 if [ $# -lt 2 ]
