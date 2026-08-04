@@ -13,7 +13,6 @@ do
     if [ "$usage" -gt "$DISK_THRESHOLD" ]
     then
         echo "Warning: $path is using $usage% of its space"
-    else
-        echo "OK: $path is using $usage of its space"
+ 
     fi
 done
