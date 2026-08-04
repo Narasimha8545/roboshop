@@ -2,7 +2,7 @@
 
 DISK_USAGE=$(df -HT | awk 'NR>1 {gsub("%","",$6); print $7,$6}')
 DISK_THRESHOLD=1
-IP=$ (curl http://169.254.169.254/latest/meta-data/public-ipv4)
+IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
 
 MSG=""
 
