@@ -12,6 +12,6 @@ do
   
     if [ "$usage" -gt "$DISK_THRESHOLD" ]
     then
-    $MSG="echo "Warning: $path is using $usage% of its space."
+    MSG+="echo "Warning: $path is using $usage% of its space.\n"
     fi
 done
