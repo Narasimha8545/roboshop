@@ -71,6 +71,8 @@ fi
 # Find old log files
 FILES=$(find "$SOURCE_DIR" -type f -name "*.log" -mtime +"$DAYS")
 
+dnf install zip -y &>>"$LOG_FILE"
+validate $? "Installing zip utility"
 
 if [ -n "$FILES" ]
 then
