@@ -27,9 +27,9 @@ check_root () {
 
 validate () {
     if [ "$1" -eq 0 ]; then
-        echo -e "${G}$2 ... Successful${N}" | tee -a "$LOG_FILE"
+        echo -e "${G}$2 ... Successful${N}" 
     else
-        echo -e "${R}$2 ... Failed${N}" | tee -a "$LOG_FILE"
+        echo -e "${R}$2 ... Failed${N}" 
         exit 1
     fi
 }
