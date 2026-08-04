@@ -12,7 +12,7 @@ do
 
     if [ "$DISK_USAGE_PERCENT" -gt "$DISK_THRESHOLD" ]
     then
-        MSG+="Warning: $DISK_PATH is using $DISK_USAGE_PERCENT of its space.\n"
+        MSG+="Warning: $DISK_PATH is using $DISK_USAGE_PERCENT of its space."
     fi
 done <<< "$DISK_USAGE"
 
