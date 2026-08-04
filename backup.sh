@@ -12,7 +12,7 @@ DAYS=${3:-14}
 
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
-LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
+LOG_FILE="$LOGS_FOLDER/$backup.log"
  
 USERID=$(id -u)
 
