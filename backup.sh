@@ -19,7 +19,7 @@ LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
  
 USERID=$(id -u)
 
-check_root() {
+check_root () {
     if [ "$USERID" -ne 0 ]; then
         echo -e "${R}Please run the script as root user${N}" | tee -a "$LOG_FILE"
         exit 1
@@ -28,7 +28,7 @@ check_root() {
     fi
 }
 
-validate() {
+validate () {
     if [ "$1" -eq 0 ]; then
         echo -e "${G}$2 ... Successful${N}" | tee -a "$LOG_FILE"
     else
@@ -37,7 +37,7 @@ validate() {
     fi
 }
 
-usage() {
+usage () {
     echo "Usage: sudo sh backup.sh <source_directory> <destination_directory> [days]"
     exit 1
 }
